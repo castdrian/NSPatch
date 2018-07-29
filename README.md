@@ -4,7 +4,5 @@ Patches NSP Files to require the minimum FW Version needed to decrypt it instead
 Credits:
 
 SciresM for hactool
-
 rkk for nspBuild
-
 Zocker4444 for discovering the patching method
