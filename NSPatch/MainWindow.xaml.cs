@@ -28,6 +28,23 @@ namespace NSPatch
         public MainWindow()
         {
             InitializeComponent();
+
+            string ktxt = AppDomain.CurrentDomain.BaseDirectory + "\\keys.txt";
+
+            bool kcheck = File.Exists(ktxt);
+
+            if (kcheck == false)
+            {
+                DialogResult kcheckd = System.Windows.Forms.MessageBox.Show(" keys.txt is missing.\n Please add it to the current working directory to ensure that\n" +
+                    " updating NSP's will work properly.",
+                    "Warning", MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Warning);
+
+                if (kcheckd == System.Windows.Forms.DialogResult.Cancel)
+                {
+                    System.Windows.Application.Current.Shutdown();
+                }
+            }
         }
 
         Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
@@ -227,6 +244,70 @@ namespace NSPatch
             onbtn();
 
             System.Windows.MessageBox.Show("Congrats this NSP will now work on " + fwlabel.Content + "!");
+        }
+
+        private void upnspipbutton_Click(object sender, RoutedEventArgs e)
+        {
+
+            openFileDialog.Filter = "NSW NSP File|*.nsp";
+            openFileDialog.Title = "Select a NSW NSP File";
+
+            if (openFileDialog.ShowDialog() == true)
+                upnspinputdisplay.Text = openFileDialog.FileName;
+        }
+
+        public async void extractncau()
+        {
+            offbtn();
+
+            string updir = AppDomain.CurrentDomain.BaseDirectory + "\\upd";
+            Directory.CreateDirectory(updir);
+
+            statuslabel.Content = "Extracting NCA's...";
+
+            string hctdir = AppDomain.CurrentDomain.BaseDirectory + "\\hactool.exe";
+            string arg = @"-tpfs0 --pfs0dir=tmp " + "\"" + inputdisplay.Text + "\"";
+
+            Process hct = new Process();
+            hct.StartInfo.FileName = hctdir;
+            hct.StartInfo.Arguments = arg;
+            hct.StartInfo.CreateNoWindow = true;
+            hct.StartInfo.UseShellExecute = false;
+            hct.StartInfo.WorkingDirectory = Directory.GetCurrentDirectory();
+            hct.EnableRaisingEvents = true;
+
+            hct.Start();
+
+            startbar();
+
+            await Task.Run(() => hct.WaitForExit());
+
+            hct.Close();
+        }
+
+        public void applyupdate()
+        {
+            string upddir = AppDomain.CurrentDomain.BaseDirectory + "\\upd";
+            var di = new DirectoryInfo(upddir);
+            var result = di.GetFiles().OrderByDescending(x => x.Length).Take(1).ToList();
+            var larnca = di.GetFiles().OrderByDescending(x => x.Length).Take(1).Select(x => x.FullName).ToList();
+
+            string bigbnca = String.Join(" ", larnca);
+
+
+            string nspudir = AppDomain.CurrentDomain.BaseDirectory + "\\hactool.exe";
+            string arg = @"-k keys.txt﻿﻿﻿ --titlekey=﻿" + titlkyinput.Text + " --basenca=" + inputdisplay.Text + " --section1=romfs.bin --exefsdir=exefs" + bigbnca;
+
+            System.Windows.MessageBox.Show("Arguments are:" + arg);
+
+            Process nsu = new Process();
+            nsu.StartInfo.FileName = nspudir;
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            applyupdate();
         }
     }
 }
