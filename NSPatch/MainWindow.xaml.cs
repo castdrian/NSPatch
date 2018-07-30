@@ -72,10 +72,13 @@ namespace NSPatch
         {
             offbtn();
 
+            string tmpdir = AppDomain.CurrentDomain.BaseDirectory + "\\tmp";
+            Directory.CreateDirectory(tmpdir);
+
             statuslabel.Content = "Extracting NSP Container...";
 
             string hctdir = AppDomain.CurrentDomain.BaseDirectory + "\\hactool.exe";
-            string arg = @"-tpfs0 --pfs0dir=tmp " + inputdisplay.Text;
+            string arg = @"-tpfs0 --pfs0dir=tmp " + "\"" + inputdisplay.Text + "\"";
 
             Process hct = new Process();
             hct.StartInfo.FileName = hctdir;
@@ -118,20 +121,43 @@ namespace NSPatch
                 }
             }
 
+            if (keylabel.Content.Equals("1"))
+            {
+                fwlabel.Content = "1.0.0";
+            }
+
+            if (keylabel.Content.Equals("2"))
+            {
+                fwlabel.Content = "3.0.0";
+            }
+
+            if (keylabel.Content.Equals("3"))
+            {
+                fwlabel.Content = "3.0.1";
+            }
+
             if (keylabel.Content.Equals("4"))
             {
                 fwlabel.Content = "4.0.0";
             }
-            else
-            {
-                DialogResult uspg = System.Windows.Forms.MessageBox.Show("This Game is not supported yet!",
-                "Error", MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
 
-                if (uspg == System.Windows.Forms.DialogResult.OK)
-                    return;
+            if (keylabel.Content.Equals("5"))
+            {
+                fwlabel.Content = "5.0.0";
             }
 
+            if (keylabel.Content.Equals("6"))
+            {
+                fwlabel.Content = "???";
+
+                DialogResult uspg = System.Windows.Forms.MessageBox.Show("This Game is not supported yet!",
+              "Error", MessageBoxButtons.OK,
+               MessageBoxIcon.Error);
+
+              if (uspg == System.Windows.Forms.DialogResult.OK)
+              return;
+            }
+             
             patchxml();
         }
 
@@ -188,7 +214,7 @@ namespace NSPatch
 
             onbtn();
 
-            System.Windows.MessageBox.Show("Congrats this NSP will now work on the previuosly shown fw version!");
+            System.Windows.MessageBox.Show("Congrats this NSP will now work on " + fwlabel.Content + "!");
         }
     }
 }
