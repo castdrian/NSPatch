@@ -121,6 +121,18 @@ namespace NSPatch
                 }
             }
 
+            if (keylabel.Content.Equals("0"))
+            {
+                fwlabel.Content = "???";
+
+                DialogResult uspg = System.Windows.Forms.MessageBox.Show("This NSP is not supported!",
+                "Error", MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+
+                if (uspg == System.Windows.Forms.DialogResult.OK)
+                    return;
+            }
+
             if (keylabel.Content.Equals("1"))
             {
                 fwlabel.Content = "1.0.0";
@@ -150,7 +162,7 @@ namespace NSPatch
             {
                 fwlabel.Content = "???";
 
-                DialogResult uspg = System.Windows.Forms.MessageBox.Show("This Game is not supported yet!",
+                DialogResult uspg = System.Windows.Forms.MessageBox.Show("This NSP is not supported yet!",
               "Error", MessageBoxButtons.OK,
                MessageBoxIcon.Error);
 
