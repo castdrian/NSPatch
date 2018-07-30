@@ -150,32 +150,32 @@ namespace NSPatch
                     return;
             }
 
-            if (keylabel.Content.Equals("1"))
+            if (keylabel.Content.Equals("0"))
             {
                 fwlabel.Content = "1.0.0";
             }
 
-            if (keylabel.Content.Equals("2"))
+            if (keylabel.Content.Equals("1"))
             {
                 fwlabel.Content = "3.0.0";
             }
 
-            if (keylabel.Content.Equals("3"))
+            if (keylabel.Content.Equals("2"))
             {
                 fwlabel.Content = "3.0.1";
             }
 
-            if (keylabel.Content.Equals("4"))
+            if (keylabel.Content.Equals("3"))
             {
                 fwlabel.Content = "4.0.0";
             }
 
-            if (keylabel.Content.Equals("5"))
+            if (keylabel.Content.Equals("4"))
             {
                 fwlabel.Content = "5.0.0";
             }
 
-            if (keylabel.Content.Equals("6"))
+            if (keylabel.Content.Equals("5"))
             {
                 fwlabel.Content = "???";
 
@@ -266,7 +266,7 @@ namespace NSPatch
             statuslabel.Content = "Extracting NCA's...";
 
             string hctdir = AppDomain.CurrentDomain.BaseDirectory + "\\hactool.exe";
-            string arg = @"-tpfs0 --pfs0dir=tmp " + "\"" + inputdisplay.Text + "\"";
+            string arg = @"-tpfs0 --pfs0dir=upd " + "\"" + inputdisplay.Text + "\"";
 
             Process hct = new Process();
             hct.StartInfo.FileName = hctdir;
