@@ -5,25 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NSPatch"
         mc:Ignorable="d"
-        Title="NSPatch" Height="245" Width="500" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Icon="favicon (2).ico">
+        Title="NSPatch" Height="270" Width="570" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Icon="favicon (2).ico">
     <Grid>
         <Button x:Name="ipbutton" Content="Choose .NSP" HorizontalAlignment="Left" Margin="229,10,0,0" VerticalAlignment="Top" Width="75" Height="23" Click="ipbutton_Click"/>
         <TextBox x:Name="inputdisplay" HorizontalAlignment="Left" Height="23" Margin="0,10,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="224"/>
-        <ProgressBar x:Name="bar1" HorizontalAlignment="Left" Height="30" Margin="0,170,0,0" VerticalAlignment="Top" Width="484"/>
-        <Button x:Name="ptchbutton" Content="Patch FW Check" HorizontalAlignment="Left" Margin="0,135,0,0" VerticalAlignment="Top" Width="95" Height="30" Click="ptchbutton_Click"/>
+        <ProgressBar x:Name="bar1" HorizontalAlignment="Left" Height="30" Margin="0,199,0,0" VerticalAlignment="Top" Width="554"/>
+        <Button x:Name="ptchbutton" Content="Patch FW Check" HorizontalAlignment="Left" Margin="0,164,0,0" VerticalAlignment="Top" Width="304" Height="30" Click="ptchbutton_Click"/>
         <Label Content="Detected Minimum Master Key Revision:" HorizontalAlignment="Left" Margin="0,38,0,0" VerticalAlignment="Top" Width="224" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"/>
         <Label Content="Minimum Playable FW Version:" HorizontalAlignment="Left" Margin="0,69,0,0" VerticalAlignment="Top" Width="224" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"/>
         <Label Content="Patching Status:" HorizontalAlignment="Left" Margin="0,100,0,0" VerticalAlignment="Top" Width="95" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"/>
         <Label x:Name="keylabel" HorizontalAlignment="Left" Margin="229,38,0,0" VerticalAlignment="Top" Width="75" Background="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}" Foreground="Blue" Height="26"/>
         <Label x:Name="fwlabel" HorizontalAlignment="Left" Margin="229,69,0,0" VerticalAlignment="Top" Width="75" Background="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}" Foreground="Blue" Height="26"/>
         <Label x:Name="statuslabel" HorizontalAlignment="Left" Margin="100,100,0,0" VerticalAlignment="Top" Width="204" Background="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}" Height="26"/>
-        <Button Content="Apply Update" HorizontalAlignment="Left" Margin="309,135,0,0" VerticalAlignment="Top" Width="175" Height="30" Click="Button_Click"/>
-        <Button x:Name="upnspipbutton" Content="Choose Update .NSP" HorizontalAlignment="Left" Margin="309,10,0,0" VerticalAlignment="Top" Width="175" Height="23" Click="upnspipbutton_Click"/>
-        <TextBox x:Name="upnspinputdisplay" HorizontalAlignment="Left" Height="26" Margin="309,38,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="175"/>
-        <Label Content="TID:" HorizontalAlignment="Left" Margin="100,135,0,0" VerticalAlignment="Top" Width="32" Height="30"/>
-        <Label x:Name="tidlabel" HorizontalAlignment="Left" Margin="137,135,0,0" VerticalAlignment="Top" Height="28" Width="167"/>
-        <Label Content="Please enter a Titlekey below:" HorizontalAlignment="Left" Margin="309,69,0,0" VerticalAlignment="Top" Width="175" Background="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}"/>
-        <TextBox x:Name="titlkyinput" HorizontalAlignment="Left" Height="26" Margin="309,100,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="175"/>
+        <Button Content="Apply Update" HorizontalAlignment="Left" Margin="309,164,0,0" VerticalAlignment="Top" Width="245" Height="30" Click="Button_Click"/>
+        <Button x:Name="upnspipbutton" Content="Choose Update .NSP" HorizontalAlignment="Left" Margin="441,10,0,0" VerticalAlignment="Top" Width="113" Height="26" Click="upnspipbutton_Click"/>
+        <TextBox x:Name="upnspinputdisplay" HorizontalAlignment="Left" Height="26" Margin="309,10,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="127"/>
+        <Label Content="TID:" HorizontalAlignment="Left" Margin="0,131,0,0" VerticalAlignment="Top" Width="32" Height="28" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"/>
+        <Label x:Name="tidlabel" HorizontalAlignment="Left" Margin="37,131,0,0" VerticalAlignment="Top" Height="28" Width="267" Background="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}"/>
+        <Label Content="Please enter the Update's Titlekey below:" HorizontalAlignment="Left" Margin="309,100,0,0" VerticalAlignment="Top" Width="245" Background="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}" Height="26"/>
+        <TextBox x:Name="titlkyinput" HorizontalAlignment="Left" Height="28" Margin="309,131,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="245"/>
+        <Label Content="Please enter the Base Game's Titlekey below:" HorizontalAlignment="Left" Margin="309,41,0,0" VerticalAlignment="Top" Width="245" Background="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}"/>
+        <TextBox HorizontalAlignment="Left" Height="26" Margin="309,69,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="245"/>
 
     </Grid>
 </Window>
