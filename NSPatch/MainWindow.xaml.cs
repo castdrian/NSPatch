@@ -77,12 +77,16 @@ namespace NSPatch
         {
             ipbutton.IsEnabled = false;
             ptchbutton.IsEnabled = false;
+            upnspipbutton.IsEnabled = false;
+            updtbutton.IsEnabled = false;
         }
 
         public void onbtn()
         {
             ipbutton.IsEnabled = true;
             ptchbutton.IsEnabled = true;
+            upnspipbutton.IsEnabled = true;
+            updtbutton.IsEnabled = true;
         }
 
         public async void extractnsp()
@@ -136,9 +140,14 @@ namespace NSPatch
                 {
                     keylabel.Content = mrmk;
                 }
+
+                string tid = order.Element("Id").Value;
+                {
+                    tidlabel.Content = tid.Substring(2);
+                }
             }
 
-            if (keylabel.Content.Equals("0"))
+            if (keylabel.Content.Equals(null))
             {
                 fwlabel.Content = "???";
 
@@ -231,24 +240,24 @@ namespace NSPatch
 
             await Task.Run(() => nsb.WaitForExit());
 
-            nsb.Close();
+            nsb.Close(); 
+
+            stopbar();
+
+            Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + @"\\tmp", true);          
+
+            System.Windows.MessageBox.Show("Congrats this NSP will now work on " + fwlabel.Content + "!");
 
             statuslabel.Content = "";
             keylabel.Content = "";
             fwlabel.Content = "";
-
-            stopbar();
-
-            Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + @"\\tmp", true);
+            tidlabel.Content = "";
 
             onbtn();
-
-            System.Windows.MessageBox.Show("Congrats this NSP will now work on " + fwlabel.Content + "!");
         }
 
         private void upnspipbutton_Click(object sender, RoutedEventArgs e)
         {
-
             openFileDialog.Filter = "NSW NSP File|*.nsp";
             openFileDialog.Title = "Select a NSW NSP File";
 
@@ -256,17 +265,58 @@ namespace NSPatch
                 upnspinputdisplay.Text = openFileDialog.FileName;
         }
 
-        public async void extractncau()
+        private void updtbutton_Click(object sender, RoutedEventArgs e)
+        {
+            checkttlky();
+        }
+
+        public void checkttlky()
+        {
+            string bsgtk = bsgtitlkyinput.Text;
+            string uptk = updtitlkyinput.Text;
+
+            if (bsgtk == "" || uptk == "")
+            {
+                DialogResult uspg = System.Windows.Forms.MessageBox.Show("You must fill in the Titlekeys!",
+                "Error", MessageBoxButtons.OK,
+                 MessageBoxIcon.Error);
+
+                if (uspg == System.Windows.Forms.DialogResult.OK)
+                    return;
+            }
+            else
+            {
+                checkbsdir();
+            }
+        }
+
+        public void checkbsdir()
+        {
+            string bsdir = AppDomain.CurrentDomain.BaseDirectory + "\\tmp";
+
+            if (Directory.Exists(bsdir))
+            {
+                decryptbsgnca();
+            }
+            else
+            {
+                reextractnsp();
+            }
+        }
+
+        public async void reextractnsp()
         {
             offbtn();
 
-            string updir = AppDomain.CurrentDomain.BaseDirectory + "\\upd";
-            Directory.CreateDirectory(updir);
+            startbar();
 
-            statuslabel.Content = "Extracting NCA's...";
+            string tmpdir = AppDomain.CurrentDomain.BaseDirectory + "\\tmp";
+            Directory.CreateDirectory(tmpdir);
+
+            statuslabel.Content = "Extracting NSP Container...";
 
             string hctdir = AppDomain.CurrentDomain.BaseDirectory + "\\hactool.exe";
-            string arg = @"-tpfs0 --pfs0dir=upd " + "\"" + inputdisplay.Text + "\"";
+            string arg = @"-tpfs0 --pfs0dir=tmp " + "\"" + inputdisplay.Text + "\"";
 
             Process hct = new Process();
             hct.StartInfo.FileName = hctdir;
@@ -278,37 +328,128 @@ namespace NSPatch
 
             hct.Start();
 
+            await Task.Run(() => hct.WaitForExit());
+
+            hct.Close();
+
+            decryptbsgnca();
+        }
+        
+        public async void decryptbsgnca()
+        {
+            offbtn();
+
             startbar();
+
+            statuslabel.Content = "Decrypting Base Game NCA...";
+
+            string tmpdir = AppDomain.CurrentDomain.BaseDirectory + "\\tmp";
+
+            var di = new DirectoryInfo(tmpdir);
+            var result = di.GetFiles().OrderByDescending(x => x.Length).Take(1).ToList();
+            var larbnca = di.GetFiles().OrderByDescending(x => x.Length).Take(1).Select(x => x.FullName).ToList();
+
+            string basenca = String.Join(" ", larbnca);
+
+            string nspddir = AppDomain.CurrentDomain.BaseDirectory + "\\hactool.exe";
+            string titlkeyp = bsgtitlkyinput.Text;
+            string bsgtk = new string(titlkeyp.Where(c => char.IsLetter(c) || char.IsDigit(c)).ToArray());
+            string arg1 = @"-k keys.txt﻿﻿﻿ " + "--titlekey=" + bsgtk + " " + basenca;
+            string arg2 = " --plaintext=" + tmpdir + "\\NCAID_PLAIN.nca";
+            string arg = arg1 + arg2;
+          
+            Process decrnca = new Process();
+            decrnca.StartInfo.FileName = nspddir;
+            decrnca.StartInfo.Arguments = arg;
+            decrnca.StartInfo.CreateNoWindow = true;
+            decrnca.StartInfo.UseShellExecute = false;
+            decrnca.StartInfo.WorkingDirectory = Directory.GetCurrentDirectory();
+            decrnca.EnableRaisingEvents = true;
+
+            decrnca.Start();
+
+            await Task.Run(() => decrnca.WaitForExit());
+
+            decrnca.Close();
+
+            extractncau();
+        }
+
+        public async void extractncau()
+        {
+            string updir = AppDomain.CurrentDomain.BaseDirectory + "\\upd";
+            Directory.CreateDirectory(updir);
+
+            statuslabel.Content = "Extracting Update NCA's...";
+
+            string hctdir = AppDomain.CurrentDomain.BaseDirectory + "\\hactool.exe";
+            string arg = @"-tpfs0 --pfs0dir=upd " + "\"" + upnspinputdisplay.Text + "\"";
+
+            Process hct = new Process();
+            hct.StartInfo.FileName = hctdir;
+            hct.StartInfo.Arguments = arg;
+            hct.StartInfo.CreateNoWindow = true;
+            hct.StartInfo.UseShellExecute = false;
+            hct.StartInfo.WorkingDirectory = Directory.GetCurrentDirectory();
+            hct.EnableRaisingEvents = true;
+
+            hct.Start();
 
             await Task.Run(() => hct.WaitForExit());
 
             hct.Close();
-        }
 
-        public void applyupdate()
-        {
-            string upddir = AppDomain.CurrentDomain.BaseDirectory + "\\upd";
-            var di = new DirectoryInfo(upddir);
-            var result = di.GetFiles().OrderByDescending(x => x.Length).Take(1).ToList();
-            var larnca = di.GetFiles().OrderByDescending(x => x.Length).Take(1).Select(x => x.FullName).ToList();
-
-            string bigbnca = String.Join(" ", larnca);
-
-
-            string nspudir = AppDomain.CurrentDomain.BaseDirectory + "\\hactool.exe";
-            string arg = @"-k keys.txt﻿﻿﻿ --titlekey=﻿" + titlkyinput.Text + " --basenca=" + inputdisplay.Text + " --section1=romfs.bin --exefsdir=exefs" + bigbnca;
-
-            System.Windows.MessageBox.Show("Arguments are:" + arg);
-
-            Process nsu = new Process();
-            nsu.StartInfo.FileName = nspudir;
-
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
             applyupdate();
         }
+
+        public async void applyupdate()
+        {
+            statuslabel.Content = "Merging NCA's...";
+
+            string curdir = AppDomain.CurrentDomain.BaseDirectory;
+            string tmpdir = AppDomain.CurrentDomain.BaseDirectory + "\\tmp";
+            string upddir = AppDomain.CurrentDomain.BaseDirectory + "\\upd";
+            string nspudir = AppDomain.CurrentDomain.BaseDirectory + "\\hactool.exe";
+            string basenca = tmpdir + "\\NCAID_PLAIN.nca";
+
+            var di = new DirectoryInfo(upddir);
+            var result = di.GetFiles().OrderByDescending(x => x.Length).Take(1).ToList();
+            var larupdnca = di.GetFiles().OrderByDescending(x => x.Length).Take(1).Select(x => x.FullName).ToList();
+
+            string updnca = String.Join(" ", larupdnca);
+
+            string titlkeyp = updtitlkyinput.Text;
+            string upgtk = new string(titlkeyp.Where(c => char.IsLetter(c) || char.IsDigit(c)).ToArray());
+
+            string arg1 = @"-k keys.txt﻿﻿﻿ " + "--titlekey=" + upgtk + " --basenca=" + basenca + " --section1=" + curdir + "\\romfs.bin" + " --exefsdir=";
+            string arg2 = tmpdir + "\\exefs " + updnca;
+            string arg = arg1 + arg2; 
+
+            Process aplupd = new Process();
+            aplupd.StartInfo.FileName = nspudir;
+            aplupd.StartInfo.Arguments = arg;
+            aplupd.StartInfo.CreateNoWindow = true;
+            aplupd.StartInfo.UseShellExecute = false;
+            aplupd.StartInfo.WorkingDirectory = Directory.GetCurrentDirectory();
+            aplupd.EnableRaisingEvents = true;
+
+            aplupd.Start();
+
+            await Task.Run(() => aplupd.WaitForExit());
+
+            aplupd.Close();
+
+            stopbar();
+
+            statuslabel.Content = "";
+
+            Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + @"\\tmp", true);
+            Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + @"\\upd", true);
+
+            onbtn();
+
+            System.Windows.MessageBox.Show("Update applyment finished.\nYou can now use your updated romFS via fs-mitm.");
+        }      
     }
 }
  
