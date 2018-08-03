@@ -56,11 +56,12 @@ namespace NSPatch
 
             if (openFileDialog.ShowDialog() == true)
                 inputdisplay.Text = openFileDialog.FileName;
+
         }
 
         private void ptchbutton_Click(object sender, RoutedEventArgs e)
         {
-            extractnsp();
+           // extractnsp();
         }
 
         public void startbar()
@@ -87,6 +88,16 @@ namespace NSPatch
             ptchbutton.IsEnabled = true;
             upnspipbutton.IsEnabled = true;
             updtbutton.IsEnabled = true;
+        }
+
+        public void readnsp()
+        {
+
+        }
+
+        public void patchfwversion()
+        {
+
         }
 
         public async void extractnsp()
@@ -161,30 +172,35 @@ namespace NSPatch
 
             if (keylabel.Content.Equals("0"))
             {
-                fwlabel.Content = "1.0.0";
+                fwlabel.Content = "all";
             }
 
             if (keylabel.Content.Equals("1"))
             {
-                fwlabel.Content = "3.0.0";
+                fwlabel.Content = "1.0.0";
             }
 
             if (keylabel.Content.Equals("2"))
             {
-                fwlabel.Content = "3.0.1";
+                fwlabel.Content = "3.0.0";
             }
 
             if (keylabel.Content.Equals("3"))
             {
-                fwlabel.Content = "4.0.0";
+                fwlabel.Content = "3.0.1";
             }
 
             if (keylabel.Content.Equals("4"))
             {
-                fwlabel.Content = "5.0.0";
+                fwlabel.Content = "4.0.0";
             }
 
             if (keylabel.Content.Equals("5"))
+            {
+                fwlabel.Content = "5.0.0";
+            }
+
+            if (keylabel.Content.Equals("6"))
             {
                 fwlabel.Content = "???";
 
